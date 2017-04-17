@@ -14,9 +14,6 @@ before((done) => {
 
 
 
-
-
-
 beforeEach((done) => {
     // Place call back function once all users are actually dropped
     mongoose.connection.collections.users.drop(() => {

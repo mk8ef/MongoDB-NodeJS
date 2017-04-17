@@ -12,12 +12,18 @@ const UserSchema = new Schema ({
         },
         required: [true, 'Name is required.'],
     },
-    postCount: Number,
+   // postCount: Number,
     posts: [PostSchema]
 
 });
 
 
+
+UserSchema.virtual('postCount').get(function(){
+
+    // Instead of referencing joe.posts, use "this"
+    return this.posts.length;
+});
 
 // Create posts schema --> posts will have a schema, but not it's own model, since it's a part of the User Model
 
