@@ -15,9 +15,14 @@ before((done) => {
 
 
 beforeEach((done) => {
+    // Use all lowercase
+    const {users, comments, blogposts} = mongoose.connection.collections;
     // Place call back function once all users are actually dropped
-    mongoose.connection.collections.users.drop(() => {
-        // Ready to run the next test
-        done();
-    });
+    users.drop(() => {
+        comments.drop(() => {
+            blogposts.drop(() => {
+                done();
+            })
+        })
+    })
 });

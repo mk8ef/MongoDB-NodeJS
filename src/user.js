@@ -13,9 +13,14 @@ const UserSchema = new Schema ({
         required: [true, 'Name is required.'],
     },
    // postCount: Number,
-    posts: [PostSchema],
-    likes: Number
 
+   // leaving posts just to have subdocument association
+    posts: [PostSchema],
+    likes: Number,
+    blogPosts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'blogPost'
+    }]
 });
 
 
@@ -26,7 +31,18 @@ UserSchema.virtual('postCount').get(function(){
     return this.posts.length;
 });
 
-// Create posts schema --> posts will have a schema, but not it's own model, since it's a part of the User Model
+
+// Middleware --> this gets executed before any user gets removed
+// Pass next --> like done, ensures it's finished
+UserSchema.pre('remove', function(next) {
+    // this === joe
+    const BlogPost = mongoose.model('blogPost');
+
+    // Use in operator to delete everything inside blogposts
+    BlogPost.remove({_id: {$in: this.blogPosts}})
+        .then(() => next());
+    
+});
 
 
 
